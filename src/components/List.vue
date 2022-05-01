@@ -61,7 +61,6 @@ export default {
     }
   },
   created() {
-      // this.getCategoryList()
       this.getArticleList()
     }, 
   methods:{
