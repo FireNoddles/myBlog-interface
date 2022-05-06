@@ -7,7 +7,7 @@
     <el-card :body-style="{ padding: '20px' }" shadow="hover" class ="card">
         <el-avatar class = "image" shape="square" :style="`background:${extractColorByName(o.name)}`"> {{o.id}} </el-avatar>
       <div>
-        <router-link :to="{path:'/admin/readArticle',query: {id: o.id}}" >
+        <router-link :to="{path:'/list/readArticle',query: {id: o.id}}" >
           <span class="text">{{o.name}}</span>
         
         <div class="bottom clearfix">
