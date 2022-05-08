@@ -25,24 +25,23 @@
     
     <div class="button">
       
-      <el-button type="text" class="button-text">HOME</el-button>
+      <el-button type="text" class="button-text" @click="jumpToList">HOME</el-button>
       <el-dropdown>
       <el-button type="text" class="button-text">
     类 别 
   </el-button>
   <el-dropdown-menu slot="dropdown">
-    <el-dropdown-item>黄金糕</el-dropdown-item>
-    <el-dropdown-item>狮子头</el-dropdown-item>
-    <el-dropdown-item>螺蛳粉</el-dropdown-item>
-    <el-dropdown-item>双皮奶</el-dropdown-item>
-    <el-dropdown-item>蚵仔煎</el-dropdown-item>
+    
+    <el-dropdown-item v-for='(item, i) in category_list' :key="i" :label="item.name" :value="item.id" >
+    <router-link :key="item.id" :to="{path:'/list',query: {cid: item.id}}" class="text">{{item.name}}</router-link>
+    </el-dropdown-item>
   </el-dropdown-menu>
 </el-dropdown>
 <div class="search bar1">
         <form>
-            <input type="text"  placeholder="搜索文章标题">
+            <input type="text" v-model="name" placeholder="搜索文章标题">
             <div>
-              <el-button class="search-button" size="mini"  icon="el-icon-search"></el-button>
+              <el-button class="search-button" size="mini"  icon="el-icon-search" @click="jumpToList"></el-button>
             </div>
         </form>
     </div>
@@ -64,10 +63,13 @@
 import avator from '../pic/avator.png'
 import avator2 from '../pic/avator2.png'
 import github from '../pic/github.png'
+import {GetCategoryListApi, GetArticleListApi} from '@/request/api.js'
 import logo from '../pic/logo.png'
   export default {
     data () {
       return {
+        name:'',
+        category_list : [],
         avatorUrl: avator,
         bigAvatorurl: avator2,
         githuburl:github,
@@ -75,10 +77,40 @@ import logo from '../pic/logo.png'
         sizeList: ["large", "medium", "small"]
       }
     },
+    created() {
+      this.getCategoryList()
+    },
     methods:{
       jumpToGithub(){
         window.open("https://github.com/FireNoddles")
-      }
+      },
+      jumpToList(){
+        if (this.name===""){
+          this.$router.push('/list')
+        }else{
+          this.$router.push('/list?name='+this.name)
+        }
+        
+      },
+      getCategoryList(){
+        this.category_list.length=0
+
+        var data = {
+          id:"",
+          name:""
+        }
+        
+        GetCategoryListApi(data).then(res=>{
+          if (res.data.status === 0) {
+            for (const key in res.data.data.list){
+              let data = res.data.data.list[key]
+              this.category_list.push(data)
+            }
+          }else{
+            alert(res.data.message)
+          }
+        })
+      },
 
       
     }
@@ -108,7 +140,12 @@ import logo from '../pic/logo.png'
     background-color: rgba(255,255,255,.2);
     backdrop-filter: blur(25px);
 }
-
+  .text {
+    text-decoration:none;
+    font-size:20px;
+    color: black;
+    
+  }
 .avator{
   margin-top:10px;
   float:left;

@@ -86,10 +86,14 @@ export default {
         if (this.searchParas.id != ""){
           this.searchParas.id = parseInt(this.searchParas.id)
         }
+        if (this.$route.query.cid != null){
+          this.searchParas.category_id = parseInt(this.$route.query.cid)
+        }
+        
         if (this.searchParas.category_id != ""){
           this.searchParas.category_id = parseInt(this.searchParas.category_id)
         }
-        
+        this.searchParas.name = this.$route.query.name
         GetArticleListApi(this.searchParas).then(res=>{
           if (res.data.status === 0) {
             this.card_data.total = res.data.data.total
